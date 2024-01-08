@@ -1,0 +1,1988 @@
+{
+	"info": {
+		"_postman_id": "ca3511d7-a8e0-4a02-ae38-2202563671fd",
+		"name": "EDW-Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign in with enrolled user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"enrollUserEmail\",\"qa1.gmedw2020@mailinator.com\");\r",
+							"pm.collectionVariables.set(\"enrollUserPassword\",\"P@ssword1\");\r",
+							"//console.log(pm.environment.get(\"baseurl\"));\r",
+							"if(pm.environment.get(\"signIn\")===\"https://apim.qa1.dignityhealthppe.org/ciam/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"signIn\")===\"https://apim.dev.dignityhealthppe.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"signIn\")===\"https://apim.dignityhealthstg.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code===200){\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"userAccesstoken\",jsonData.result.accessToken);\r",
+							"pm.collectionVariables.set(\"userUserID\",jsonData.result.userProfile.userId);\r",
+							"pm.collectionVariables.set(\"userVerificationCode\",jsonData.result.userProfile.emailVerificationCode);\r",
+							"pm.collectionVariables.set(\"userEmail\",jsonData.result.userProfile.self.email);\r",
+							"pm.collectionVariables.set(\"userPersonId\",jsonData.result.userProfile.self.personId);\r",
+							"pm.collectionVariables.set(\"userFirstName\",jsonData.result.userProfile.self.firstName);\r",
+							"pm.collectionVariables.set(\"userLastName\",jsonData.result.userProfile.self.lastName);\r",
+							"pm.collectionVariables.set(\"userContactName\",jsonData.result.userProfile.self.contactName);\r",
+							"pm.collectionVariables.set(\"userContactPh\",jsonData.result.userProfile.self.contactPhoneNumber);\r",
+							"pm.collectionVariables.set(\"userDob\",jsonData.result.userProfile.dateOfBirth);\r",
+							"pm.collectionVariables.set(\"userGender\",jsonData.result.userProfile.gender);\r",
+							"pm.collectionVariables.set(\"userPhoneNumber\",jsonData.result.userProfile.phoneNumber);\r",
+							"pm.collectionVariables.set(\"userMobilePhoneNumber\",jsonData.result.userProfile.mobilePhoneNumber);\r",
+							"pm.collectionVariables.set(\"userOfficePhoneNumber\",jsonData.result.userProfile.officePhoneNumber);\r",
+							"pm.collectionVariables.set(\"userHomePhoneNumber\",jsonData.result.userProfile.homePhoneNumber);\r",
+							"pm.collectionVariables.set(\"userPrimaryCaregiverName\",jsonData.result.userProfile.primaryCaregiverName);\r",
+							"pm.collectionVariables.set(\"userAddressLine1\",jsonData.result.userProfile.address.line1);\r",
+							"pm.collectionVariables.set(\"userAddressLine2\",jsonData.result.userProfile.address.line2);\r",
+							"pm.collectionVariables.set(\"userCity\",jsonData.result.userProfile.address.city);\r",
+							"pm.collectionVariables.set(\"userStateOrProvince\",jsonData.result.userProfile.address.stateOrProvince);\r",
+							"pm.collectionVariables.set(\"userZipCode\",jsonData.result.userProfile.address.zipCode);\r",
+							"pm.collectionVariables.set(\"userCountryCode\",jsonData.result.userProfile.address.countryCode);\r",
+							"\r",
+							"pm.test(\"User Sign In API\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//var reqBody = JSON.parse(request.body);\r",
+							"//pm.collectionVariables.set('userPassword',reqBody.password);\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"to check is valid:\"+jsonData.isValid,function(){\r",
+							"pm.expect(jsonData.isValid).to.eql(true)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Error message\",function(){\r",
+							"pm.expect(jsonData.errors).to.eql([])\r",
+							"});\r",
+							"} else{\r",
+							"    pm.test(\"User Sign In API failed with response code \"+pm.response.code, function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n    {\r\n\t\t\"username\":\"qa1.gmedw2020@mailinator.com\",\r\n\t\t\"password\":\"P@ssword1\",\r\n\t\t\"includeRefreshTokenExpiryTime\": true\r\n\t}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{signIn}}/v1/mobile/auth/myhome.mobile.consumer/sign-in",
+					"host": [
+						"{{signIn}}"
+					],
+					"path": [
+						"v1",
+						"mobile",
+						"auth",
+						"myhome.mobile.consumer",
+						"sign-in"
+					]
+				},
+				"description": "Always execute this query before anyother graphQL quries"
+			},
+			"response": []
+		},
+		{
+			"name": "ServiceToken",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"consumerApp\",\"2\");\r",
+							"pm.collectionVariables.set(\"providerApp\",\"1\")"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"serviceToken\",jsonData.accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serviceTokenUrl}}Token/get-token-by-source-dest?sourceApplicationId={{consumerApp}}&destinationApplicationId={{providerApp}}",
+					"host": [
+						"{{serviceTokenUrl}}Token"
+					],
+					"path": [
+						"get-token-by-source-dest"
+					],
+					"query": [
+						{
+							"key": "sourceApplicationId",
+							"value": "{{consumerApp}}"
+						},
+						{
+							"key": "destinationApplicationId",
+							"value": "{{providerApp}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Proof and Promote",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"if(pm.environment.get(\"baseurl\")===\"https://apim.qa1.dignityhealthppe.org/membervalidation/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"baseurl\")===\"https://apim.dev.dignityhealthppe.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"baseurl\")===\"https://apim.dignityhealthstg.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors == [] & jsonData.warnings == []){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230374: Proof and promote user endpoint should return 200 Ok response code with response body executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230374: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230374: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230374: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230374: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230374: Proof and promote user endpoint should return 200 Ok response code with response body executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230374: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230374: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230374: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230374: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230374: Proof and promote user endpoint should return 200 Ok response code with response body execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{serviceToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJlZmVoeUFkZzdOMlBrRG9XNHh2SngtUlNNLTZzRGlVTF9pYnRJYUtYQk0uSWErYmpEaWswNmJ5dzZxTFlrcnkxT0NvQ0RYNEhPYzY1d2JOV1B0VE1qUT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE2MjAyNTIsImV4cCI6MTU2MTYyMjA1MiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsImVtYWlsIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.Z6FxXX3heHEEdLIFxnAyVpTCg9VWtvGih4HI1OoZ-zRscOiYBP3UWKw8DLaKlMlWQUp__FEz69rhcRlqekj7IgVn0YcQpazcktEA4AS2ftF9484VHQvnuoGCQLrQSv2D3ZZrrwN126q1E4xcJgfp8DQEA379URSvyzRi8DmYOiRckidGZeKhWwWUvCd73i3NHv7bqtCnzmHecOhJ-iBRpnvegoW67UalwLYP2Jk5Myk3g1BeBhyji4n-p6oeucSSevCBd-Cb0e4oIcHyQmU2XWR-8E7HKzRRNJrJZmIhW9wFolOFPuJYy70s9ga4VVlRh_mgh8RxYSRYJqMeuSUyBA"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"{{enrollUserEmail}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/proof-and-promote",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"proof-and-promote"
+					]
+				},
+				"description": "This request can be called through CIAM API or Patient Portal API"
+			},
+			"response": []
+		},
+		{
+			"name": "Query Edw Records with Alternate Info",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"if(pm.environment.get(\"baseurl\")===\"https://apim.qa1.dignityhealthppe.org/membervalidation/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"baseurl\")===\"https://apim.dev.dignityhealthppe.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"baseurl\")===\"https://apim.dignityhealthstg.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors == [] & jsonData.warnings == []){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230398: Query EDW records with Alternate info API executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230398: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230398: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230398: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230398: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230398: Query EDW records with Alternate info API executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230398: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230398: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230398: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230398: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230398: Query EDW records with Alternate info API execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							"    var txtData = pm.response.text()\r",
+							"    console.log(txtData);\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{serviceToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULldWSkQ2SUphdklQME1JUWVHTVRzRHN2b1pwWnpoS2UzR1ppenMxMEdPRW8uTWdRd2RUWXVjbTVaQklESDNzcEQwQyt2dGxML1pnRndlOWIrUWFsWlY4dz0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NTYwMTUyNTMsImV4cCI6MTU1NjAxNzA1MywiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVkZDR5bHEyVHVpSFJnZzBoNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsImdyb3VwcyIsImVtYWlsIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzbG90MS10ZXN0LnVzZXIrMkBtYWlsaW5hdG9yLmNvbSIsImlkX2xldmVsIjo0LCJncm91cHMiOlsiT09EIERldmVsb3BlcnMiLCJFdmVyeW9uZSIsIk15IEhlbHAgLSBTdXBlciBBZG1pbiIsIkxldmVsIDIiLCJMZXZlbCA0Il0sInByZWZlcnJlZF91c2VybmFtZSI6InNsb3QxLXRlc3QudXNlcisyQG1haWxpbmF0b3IuY29tIiwiZ2l2ZW5fbmFtZSI6ImZvbyIsImZhbWlseV9uYW1lIjoiYmFyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiI1NjA1M2FiZC01MDQ4LTQ3YmQtYjYwMy0wZGRmN2VlZTUxZWMifQ.Rqx2a6ivYyWfqPGCRHL1qEidAEk50-B3lxe3T_bb14N1TgRM1cIiqK2KltepkF15P-alyMnMsl9YbC23V8y4d7lQ8H9Mcyy_Njdf3g8LQbFkwcDqZ3GHpwU8XHgNcRJoHcmF7qb1g8rTSPXTA_7O008y3uclxrszUwqcGyudgEMH7Aqft7-_04EuoX4P8HBrWUlk9juUoHsmR7c8guFXdG0yC_qQxFoC1PS4YGWkZDMsIqbB2OjzcijoS5UFsKj45Sc0g2lTbDxjIen6cioHuXn_RZJMl2D5-Ek88FG4l-_UGuJAMqwTy4KyGZ2YO0Ndt86jg844IZ1oc7bh7YTSFg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"\",\n  \"edwRequestId\": 851,\n  \"firstName\": \"{{userFirstName}}\",\n  \"lastName\": \"{{userLastName}}\",\n  \"dateOfBirth\": \"{{userDob}}\",\n  \"gender\": \"{{userGender}}\",\n  \"zipCode\": \"{{userZipCode}}\",\n  \"mrn\": \"\"\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/query-with-alt-info?username={{enrollUserEmail}}",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"query-with-alt-info"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{enrollUserEmail}}"
+						}
+					]
+				},
+				"description": "This request can be called through CIAM or Patient Portal"
+			},
+			"response": []
+		},
+		{
+			"name": "Query Edw Records with Alt Info and Save",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors == [] & jsonData.warnings == []){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230421: Queries EDW for records with alternate info and save the EDW request to replay API executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230421: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230421: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230421: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230421: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230421: Queries EDW for records with alternate info and save the EDW request to replay API executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230421: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230421: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230421: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230421: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230421: Queries EDW for records with alternate info and save the EDW request to replay API execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							"    var txtData = pm.response.text()\r",
+							"    console.log(txtData);\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"if(pm.environment.get(\"baseurl\")===\"https://apim.qa1.dignityhealthppe.org/membervalidation/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"baseurl\")===\"https://apim.dev.dignityhealthppe.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"baseurl\")===\"https://apim.dignityhealthstg.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{serviceToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULktoZnpRckFtUUdOdTlfUll5ZG90UTdNaGtrZ0lXWDZaRGVHSUhTQUptdVkuSUJTbDV3Y0gvL0ZFdXordzRieUdpSnp1REJoK21VcXYxeFIzTUhyWkhOZz0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NTYwMDY0NTAsImV4cCI6MTU1NjAwODI1MCwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVkZDR5bHEyVHVpSFJnZzBoNyIsInNjcCI6WyJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyIsImdyb3VwcyIsImVtYWlsIiwicHJvZmlsZSJdLCJzdWIiOiJzbG90MS10ZXN0LnVzZXIrMkBtYWlsaW5hdG9yLmNvbSIsImlkX2xldmVsIjo0LCJncm91cHMiOlsiT09EIERldmVsb3BlcnMiLCJFdmVyeW9uZSIsIk15IEhlbHAgLSBTdXBlciBBZG1pbiIsIkxldmVsIDIiLCJMZXZlbCA0Il0sInByZWZlcnJlZF91c2VybmFtZSI6InNsb3QxLXRlc3QudXNlcisyQG1haWxpbmF0b3IuY29tIiwiZ2l2ZW5fbmFtZSI6ImZvbyIsImZhbWlseV9uYW1lIjoiYmFyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiI1NjA1M2FiZC01MDQ4LTQ3YmQtYjYwMy0wZGRmN2VlZTUxZWMifQ.QQqLkyMEM4TxwByjJiMkXtXQjMOA5HFmbDw4SRutW2nR1rfKUGqbpTguaW132ScKAXZqWy8J3TpNXvV1zu8dmP7q5KfIhoCYnwsc-vnInhE_MbIRElJ8gM5bsJlX5gPhV5ncJpKF1eNDRSe8z0X11pyQxsIDaw_ctwa1ZbjvjYsS00CjcxxvTnw4s-88QBrM0KgykxLMoEt1h3iiiYJlAjQV3FfmLo7-zqMOML9fDeObKw3m9cw9SAYACujVHuymFDc3UPZQURATA4-DmZQ7rUDTNPjWQBjGz6oE-GJnqUB05o4IcrLx51xCV2VmjMAqq6z7GXwCofzEN4n64Cv4Sw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestId\": \"\",\r\n  \"edwRequestId\": 851,\r\n  \"firstName\": \"KERMIT\",\r\n  \"lastName\": \"ZZTESTFROG\",\r\n  \"dateOfBirth\": \"1991-01-01\",\r\n  \"gender\": \"MALE\",\r\n  \"zipCode\": \"96001\",\r\n  \"mrn\": \"58004322\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/query-with-alt-info-and-save?username=MMCNEILLDHFROG@GMAIL.COM",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"query-with-alt-info-and-save"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "MMCNEILLDHFROG@GMAIL.COM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Edw Request By Self ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"if(pm.environment.get(\"baseurl\")===\"https://apim.qa1.dignityhealthppe.org/membervalidation/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"baseurl\")===\"https://apim.dev.dignityhealthppe.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"baseurl\")===\"https://apim.dignityhealthstg.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors == [] & jsonData.warnings == []){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230423: Query EDW request by SelfId API executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230423: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230423: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230423: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230423: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230423: Query EDW request by SelfId API executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230423: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230423: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230423: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230423: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230423: Query EDW request by SelfId API execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							"    var txtData = pm.response.text()\r",
+							"    console.log(txtData);\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{serviceToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULldWSkQ2SUphdklQME1JUWVHTVRzRHN2b1pwWnpoS2UzR1ppenMxMEdPRW8uTWdRd2RUWXVjbTVaQklESDNzcEQwQyt2dGxML1pnRndlOWIrUWFsWlY4dz0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NTYwMTUyNTMsImV4cCI6MTU1NjAxNzA1MywiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVkZDR5bHEyVHVpSFJnZzBoNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsImdyb3VwcyIsImVtYWlsIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzbG90MS10ZXN0LnVzZXIrMkBtYWlsaW5hdG9yLmNvbSIsImlkX2xldmVsIjo0LCJncm91cHMiOlsiT09EIERldmVsb3BlcnMiLCJFdmVyeW9uZSIsIk15IEhlbHAgLSBTdXBlciBBZG1pbiIsIkxldmVsIDIiLCJMZXZlbCA0Il0sInByZWZlcnJlZF91c2VybmFtZSI6InNsb3QxLXRlc3QudXNlcisyQG1haWxpbmF0b3IuY29tIiwiZ2l2ZW5fbmFtZSI6ImZvbyIsImZhbWlseV9uYW1lIjoiYmFyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiI1NjA1M2FiZC01MDQ4LTQ3YmQtYjYwMy0wZGRmN2VlZTUxZWMifQ.Rqx2a6ivYyWfqPGCRHL1qEidAEk50-B3lxe3T_bb14N1TgRM1cIiqK2KltepkF15P-alyMnMsl9YbC23V8y4d7lQ8H9Mcyy_Njdf3g8LQbFkwcDqZ3GHpwU8XHgNcRJoHcmF7qb1g8rTSPXTA_7O008y3uclxrszUwqcGyudgEMH7Aqft7-_04EuoX4P8HBrWUlk9juUoHsmR7c8guFXdG0yC_qQxFoC1PS4YGWkZDMsIqbB2OjzcijoS5UFsKj45Sc0g2lTbDxjIen6cioHuXn_RZJMl2D5-Ek88FG4l-_UGuJAMqwTy4KyGZ2YO0Ndt86jg844IZ1oc7bh7YTSFg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/query-by-selfid?selfId={{userPersonId}}",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"query-by-selfid"
+					],
+					"query": [
+						{
+							"key": "selfId",
+							"value": "{{userPersonId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Edw Records and Associated Facilities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors[0] == null & jsonData.warnings[0] == null){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230425: Query Edw Records and Associated Facilities API executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230425: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230425: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230425: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230425: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230425: Query Edw Records and Associated Facilities API executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230425: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230425: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230425: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230425: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230425: Query Edw Records and Associated Facilities API execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							"    var txtData = pm.response.text()\r",
+							"    console.log(txtData);\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"if(pm.environment.get(\"baseurl\")===\"https://apim.qa1.dignityhealthppe.org/membervalidation/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"baseurl\")===\"https://apim.dev.dignityhealthppe.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"baseurl\")===\"https://apim.dignityhealthstg.org/membervalidation/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{serviceToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULi1EV1AyUUthODY1Qy04dERWNzNheHQybXVSc2ZUSWtieXVzeGR1SnE5UTgud2hvSnczeEZrU2Z5dGxEZnJjN1B1eC83VFFuOHZURmpMU2I4U29SbFhqTT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE2MzUyMjksImV4cCI6MTU2MTYzNzAyOSwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsImVtYWlsIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.jXyeYwJJVoL2-0j0yDHof4-QgT5-RiSq9th_o9LJYIMMQUMf7mN9Cmbl5SO6TCVCn7tf8zdJd7H8NsCCk6wkR9khZgH1IhBKchqLnKHQfYCFlOGM8IqrvCRgsPamTZieyDwSXzXcrGhmWlDLLxF0cmrmpW17tMAQeyP4uuKbX3Oucw6b3E3oqM83jxyn4dhCGZZcGUwwHBA0Vxxwoutgzs9RTTWnNbMoDcEMJFR_0LquuZKhqjmvMtI6AeIetW3lhudS0MmoyL_fccxIx2RST4dfMIs7wFIMpikFFtnlxI0aiknhl0Rp8PWzjX-fRD84GcI4-JzbT9WT-tRBB7K9Uw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"sunnys2@mailinator.com\",\r\n  \"userId\": 4741,\r\n  \"request\": {\r\n  \"requestId\": \"\",\r\n  \"edwRequestId\": 0,\r\n  \"firstName\": \"KERMIT\",\r\n  \"lastName\": \"ZZTESTFROG\",\r\n  \"dateOfBirth\": \"1991-01-01\",\r\n  \"gender\": \"MALE\",\r\n  \"zipCode\": \"96001\",\r\n  \"mrn\": \"58005986\"\r\n},\r\n  \"idLevel\": \"LEVEL3\",\r\n  \"personId\": \"05B435F4-E1BE-41D3-B0CB-DA537F713DE3\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/query-records-get-associated-facilities",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"query-records-get-associated-facilities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patient Proof",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"//console.log(pm.environment.get(\"baseurl\"));\r",
+							"if(pm.environment.get(\"signIn\")===\"https://apim.qa1.dignityhealthppe.org/ciam/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"signIn\")===\"https://apim.dev.dignityhealthppe.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"signIn\")===\"https://apim.dignityhealthstg.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors[0] == null & jsonData.warnings[0] == null){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230428: Uses the person information to attempt a patient-proof API executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230428: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230428: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230428: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230428: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230428: Uses the person information to attempt a patient-proof API executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230428: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230428: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230428: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230428: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230428: Uses the person information to attempt a patient-proof API execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							"    var txtData = pm.response.text()\r",
+							"    console.log(txtData);\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{serviceToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/{{userPersonId}}/patient-proof",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"{{userPersonId}}",
+						"patient-proof"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query for Edw Records and Save",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"if(pm.environment.get(\"signIn\")===\"https://apim.qa1.dignityhealthppe.org/ciam/\"){\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'cfcf42fd61f54717870537a867791ab3'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"} \r",
+							"else if(pm.environment.get(\"signIn\")===\"https://apim.dev.dignityhealthppe.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'722fce6d69044acd9f59ff6992832141'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}\r",
+							"\r",
+							"else if (pm.environment.get(\"signIn\")===\"https://apim.dignityhealthstg.org/ciam/\"){\r",
+							"\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Subscription-Key',\r",
+							"    'value':'2014b854f7154eefa9bc91bbd7d01935'\r",
+							"});\r",
+							"pm.request.headers.add({\r",
+							"    'key':'Ocp-Apim-Trace',\r",
+							"    'value':'true'\r",
+							"});\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"    var jsonData = pm.response.json();\r",
+							"\t\tif(jsonData.errors[0] == null & jsonData.warnings[0] == null){\r",
+							"\t\t\r",
+							"\t\t   pm.test(\"Test Case 230431: Queries for EDW records and save records API executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230431: API response time is \"+pm.response.responseTime, function () {\r",
+							"\t\t\tpm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"\t\t\t});\r",
+							"\r",
+							"\t\t\tpm.test(\"Test Case 230431: isValid parameter response is \"+jsonData.isValid,function(){\r",
+							"\t\t\tpm.expect(jsonData.isValid).to.eql(true)\r",
+							"\t\t\t});\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230431: No error messages \"+jsonData.errors);\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230431: No warning messages \"+jsonData.warnings);\r",
+							"\t\t\t\r",
+							"\t\t\r",
+							"\t\t}\r",
+							"\t\telse{\r",
+							"\t\t\t\r",
+							"\t\t\tpm.test(\"Test Case 230431: Queries for EDW records and save records API executed with error and warning messages and response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t\t\r",
+							"\t\t\tif(jsonData.errors[0] == null){\r",
+							"\t\t\t\tpm.test(\"Test Case 230431: No Error message\");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230431: Error code \"+jsonData.errors[0].code,function(){\r",
+							"                    pm.expect(jsonData.errors[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t\t}\r",
+							"\t\t\t\t\r",
+							"\t\t\tif(jsonData.warnings[0] == null)\t{\r",
+							"\t\t\t\tpm.test(\"Test Case 230431: No warning messages \");\r",
+							"\t\t\t\t}else{\r",
+							"\t\t\t\tpm.test(\"Test Case 230431: Warning code\"+jsonData.warnings[0].code,function(){\r",
+							"                    pm.expect(jsonData.warnings[0]).to.be.null;\r",
+							"                });\r",
+							"\t\t\t}\r",
+							"\t\t\t\r",
+							"\t\t}\r",
+							"\t}\r",
+							"\t\r",
+							"\telse{\r",
+							"\t\tpm.test(\"Test Case 230431: Queries for EDW records and save records API execution failed with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t}\t\r",
+							"\r",
+							"    var txtData = pm.response.text()\r",
+							"    console.log(txtData);\r",
+							"\r",
+							"   \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"person\": {\r\n    \"personId\": \"05B435F4-E1BE-41D3-B0CB-DA537F713DE3\",\r\n    \"idLevel\": \"2\",\r\n    \"firstName\": \"KERMIT\",\r\n    \"lastName\": \"ZZTESTFROG\",\r\n    \"preferredName\": null,\r\n    \"primaryCaregiverName\": null,\r\n    \"contactName\": null,\r\n    \"contactPhoneNumber\": null,\r\n    \"email\": \"sunnys2@mailinator.com\",\r\n    \"dateOfBirth\": \"1991-01-01\",\r\n    \"gender\": \"MALE\",\r\n    \"degreeCredential\": null,\r\n    \"specialty\": null,\r\n    \"phoneNumber\": \"6022980401\",\r\n    \"mobilePhoneNumber\": null,\r\n    \"officePhoneNumber\": null,\r\n    \"isPregnant\": false,\r\n    \"weeksPregnant\": 0,\r\n    \"numKbaAttempts\": 0,\r\n    \"nextKbaAttempt\": null,\r\n    \"address\": {\r\n      \"line1\": \"3033\",\r\n      \"line2\": \"\",\r\n      \"city\": \"REDDING\",\r\n      \"stateOrProvince\": \"CA\",\r\n      \"zipCode\": \"96001\",\r\n      \"countryCode\": null\r\n    },\r\n    \"insuranceProvider\": {\r\n      \"providerName\": \"\",\r\n      \"insurancePlan\": \"\",\r\n      \"groupNumber\": \"\",\r\n      \"memberNumber\": \"\"\r\n    }\r\n  },\r\n  \"username\": \"MMCNEILLDHFROG@GMAIL.COM\",\r\n  \"useAllRequestSources\": true,\r\n  \"forceTrustedRequests\": true,\r\n  \"performDryRun\": true\r\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}v1/integrations/edw/query-for-records-and-save",
+					"host": [
+						"{{baseurl}}v1"
+					],
+					"path": [
+						"integrations",
+						"edw",
+						"query-for-records-and-save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EdwRecordsAsQueryBulk",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data !=null ){\r",
+							"\t\t\tpm.test(\"  graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(\"  graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(\"  graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"}\r",
+							"else{\r",
+							"\tpm.test(\" graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query edwRecordsAsPortalsQueryBulk($requests: [QueryForRecordsRequest]) {\r\n  edwRecordsAsPortalsQueryBulk(requests: $requests) {\r\n    showWizard\r\n    results {\r\n      isTrusted\r\n      edwMatchType\r\n      patientExists\r\n      portal {\r\n        name\r\n        loginUrl\r\n        selfEnrollmentUrl\r\n        dashboardUrl\r\n        portalType\r\n        domains {\r\n          domainId\r\n          name\r\n        }\r\n      }\r\n      facilities {\r\n        edwFacilityName\r\n        friendlyFacilityName\r\n        domainName\r\n        registrationSystem\r\n        webAddress\r\n        region\r\n        groupId\r\n        empiId\r\n        schedulingLocationId\r\n        latitude\r\n        longitude\r\n        addressLine1\r\n        addressLine2\r\n        city\r\n        stateOrProvince\r\n        zipCode\r\n        countryCode\r\n        barGroup {\r\n          barGroupId\r\n          empiId\r\n          empiHubId\r\n          deletedByUserId\r\n        }\r\n        alternateNames {\r\n          alternateFacilityName\r\n        }\r\n        images {\r\n          groupId\r\n          urlPath\r\n          url\r\n          height\r\n          width\r\n          isDefaultImage\r\n        }\r\n      }\r\n    }\r\n    records {\r\n      isVisible\r\n      isRegisteredInPortal\r\n      mrn\r\n      facility {\r\n        edwFacilityName\r\n        friendlyFacilityName\r\n        domainName\r\n        registrationSystem\r\n        webAddress\r\n        region\r\n        groupId\r\n        empiId\r\n        schedulingLocationId\r\n        latitude\r\n        longitude\r\n        addressLine1\r\n        addressLine2\r\n        city\r\n        stateOrProvince\r\n        zipCode\r\n        countryCode\r\n      }\r\n      portal {\r\n        name\r\n        loginUrl\r\n        selfEnrollmentUrl\r\n        dashboardUrl\r\n        portalType\r\n      }\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"requests\": [\r\n    {\r\n    \"firstName\": \"Kermit\",\r\n    \"lastName\": \"ZZTestFrog\",\r\n    \"dateOfBirth\": \"01/01/1991\",\r\n    \"zipCode\": \"96001\",\r\n    \"gender\": \"MALE\"     \r\n    }\r\n  ]\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/graphql/query",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"graphql",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EdwRecordsAsPortalsQueryAnonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data !=null ){\r",
+							"\t\t\tpm.test(\"  graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(\"  graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(\"  graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"}\r",
+							"else{\r",
+							"\tpm.test(\" graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query edwRecordsAsPortalsQueryAnonymous($args: QueryForRecordsRequest) {\r\n  edwRecordsAsPortalsQueryAnonymous(args: $args) {\r\n    showWizard\r\n    results {\r\n      isTrusted\r\n      edwMatchType\r\n      patientExists\r\n      portal {\r\n        name\r\n        loginUrl\r\n        selfEnrollmentUrl\r\n        dashboardUrl\r\n        portalType\r\n        domains {\r\n          domainId\r\n          name\r\n        }\r\n      }\r\n      facilities {\r\n        edwFacilityName\r\n        friendlyFacilityName\r\n        domainName\r\n        registrationSystem\r\n        webAddress\r\n        region\r\n        groupId\r\n        empiId\r\n        schedulingLocationId\r\n        latitude\r\n        longitude\r\n        addressLine1\r\n        addressLine2\r\n        city\r\n        stateOrProvince\r\n        zipCode\r\n        countryCode\r\n        barGroup {\r\n          barGroupId\r\n          empiId\r\n          empiHubId\r\n          deletedByUserId\r\n        }\r\n        alternateNames {\r\n          alternateFacilityName\r\n        }\r\n        images {\r\n          groupId\r\n          urlPath\r\n          url\r\n          height\r\n          width\r\n          isDefaultImage\r\n        }\r\n      }\r\n    }\r\n    records {\r\n      isVisible\r\n      isRegisteredInPortal\r\n      mrn\r\n      facility {\r\n        edwFacilityName\r\n        friendlyFacilityName\r\n        domainName\r\n        registrationSystem\r\n        webAddress\r\n        region\r\n        groupId\r\n        empiId\r\n        schedulingLocationId\r\n        latitude\r\n        longitude\r\n        addressLine1\r\n        addressLine2\r\n        city\r\n        stateOrProvince\r\n        zipCode\r\n        countryCode\r\n      }\r\n      portal {\r\n        name\r\n        loginUrl\r\n        selfEnrollmentUrl\r\n        dashboardUrl\r\n        portalType\r\n      }\r\n    }\r\n    records{\r\n        mrn\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"args\": {\r\n    \"firstName\": \"{{userFirstName}}\",\r\n    \"lastName\": \"{{userLastName}}\",\r\n    \"dateOfBirth\": \"{{userDob}}\",\r\n    \"zipCode\": \"{{userZipCode}}\",\r\n    \"gender\": \"{{userGender}}\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/graphql/query",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"graphql",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EdwRecordsAsPortalsQuery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data !=null ){\r",
+							"\t\t\tpm.test(\"EdwRecordsAsPortalsQuery graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(\"EdwRecordsAsPortalsQuery graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(\"EdwRecordsAsPortalsQuery graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"}\r",
+							"else{\r",
+							"\tpm.test(\"EdwRecordsAsPortalsQuery graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULi1EV1AyUUthODY1Qy04dERWNzNheHQybXVSc2ZUSWtieXVzeGR1SnE5UTgud2hvSnczeEZrU2Z5dGxEZnJjN1B1eC83VFFuOHZURmpMU2I4U29SbFhqTT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE2MzUyMjksImV4cCI6MTU2MTYzNzAyOSwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsImVtYWlsIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.jXyeYwJJVoL2-0j0yDHof4-QgT5-RiSq9th_o9LJYIMMQUMf7mN9Cmbl5SO6TCVCn7tf8zdJd7H8NsCCk6wkR9khZgH1IhBKchqLnKHQfYCFlOGM8IqrvCRgsPamTZieyDwSXzXcrGhmWlDLLxF0cmrmpW17tMAQeyP4uuKbX3Oucw6b3E3oqM83jxyn4dhCGZZcGUwwHBA0Vxxwoutgzs9RTTWnNbMoDcEMJFR_0LquuZKhqjmvMtI6AeIetW3lhudS0MmoyL_fccxIx2RST4dfMIs7wFIMpikFFtnlxI0aiknhl0Rp8PWzjX-fRD84GcI4-JzbT9WT-tRBB7K9Uw"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  edwRecordsAsPortalsQuery(username: \"{{enrollUserEmail}}\", personId: \"{{userPersonId}}\") {\r\n    showWizard\r\n    results {\r\n      isTrusted\r\n      edwMatchType\r\n      patientExists\r\n      portal {\r\n        name\r\n        loginUrl\r\n        selfEnrollmentUrl\r\n        dashboardUrl\r\n        portalType\r\n        domains {\r\n          domainId\r\n          name\r\n        }\r\n      }\r\n      facilities {\r\n        edwFacilityName\r\n        friendlyFacilityName\r\n        domainName\r\n        registrationSystem\r\n        webAddress\r\n        region\r\n        groupId\r\n        empiId\r\n        schedulingLocationId\r\n        latitude\r\n        longitude\r\n        addressLine1\r\n        addressLine2\r\n        city\r\n        stateOrProvince\r\n        zipCode\r\n        countryCode\r\n        barGroup {\r\n          barGroupId\r\n          empiId\r\n          empiHubId\r\n          deletedByUserId\r\n        }\r\n        alternateNames {\r\n          alternateFacilityName\r\n        }\r\n        images {\r\n          groupId\r\n          urlPath\r\n          url\r\n          height\r\n          width\r\n          isDefaultImage\r\n        }\r\n      }\r\n    }\r\n    records {\r\n      isVisible\r\n      isRegisteredInPortal\r\n      mrn\r\n      facility {\r\n        edwFacilityName\r\n        friendlyFacilityName\r\n        domainName\r\n        registrationSystem\r\n        webAddress\r\n        region\r\n        groupId\r\n        empiId\r\n        schedulingLocationId\r\n        latitude\r\n        longitude\r\n        addressLine1\r\n        addressLine2\r\n        city\r\n        stateOrProvince\r\n        zipCode\r\n        countryCode\r\n      }\r\n      portal {\r\n        name\r\n        loginUrl\r\n        selfEnrollmentUrl\r\n        dashboardUrl\r\n        portalType\r\n      }\r\n    }\r\n    records{\r\n        mrn\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"args\": {\r\n    \"firstName\": \"{{userFirstName}}\",\r\n    \"lastName\": \"{{userLastName}}\",\r\n    \"dateOfBirth\": \"{{userDob}}\",\r\n    \"zipCode\": \"{{userZipCode}}\",\r\n    \"gender\": \"{{userGender}}\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}graphql/query",
+					"host": [
+						"{{baseurl}}graphql"
+					],
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AssociatedFacilities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data.associatedFacilities !=null ){\r",
+							"\t\t\tpm.test(\"AssociatedFacilities graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(\"  graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data.associatedFacilities).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(\"  graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data.associatedFacilities).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"} \r",
+							"else{\r",
+							"\tpm.test(\"AssociatedFacilities graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  associatedFacilities(\r\n    username:\"{{enrollUserEmail}}\",\r\n    personId: \"05B435F4-E1BE-41D3-B0CB-DA537F713DE3\"\r\n  ){\r\n    isTrusted\r\n    edwMatchType\r\n    patientExists\r\n    portal {\r\n      portalId\r\n      name\r\n      loginUrl\r\n      selfEnrollmentUrl\r\n      dashboardUrl\r\n      portalType\r\n    }\r\n    facilities {\r\n      edwFacilityName\r\n      friendlyFacilityName\r\n      domainName\r\n      registrationSystem\r\n      webAddress\r\n      schedulingLocationId\r\n      latitude\r\n      longitude\r\n      addressLine1\r\n      addressLine2\r\n      city\r\n      stateOrProvince\r\n      zipCode\r\n      countryCode\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/graphql/query",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"graphql",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "QueryEdwByUsername",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"var ApiName = \"QueryEdwByUsername\";\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data !=null ){\r",
+							"\t\t\tpm.test(ApiName+\" graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(ApiName+\" graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(ApiName+\" graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"}\r",
+							"else{\r",
+							"\tpm.test(ApiName+\" graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  queryEdwByUsername(username: \"qa1.gmedw2020@mailinator.com\") {\r\n    isVisible\r\n    mrn\r\n    isRegisteredInPortal\r\n    facility {\r\n      edwFacilityName\r\n      friendlyFacilityName\r\n      domainName\r\n      registrationSystem\r\n      webAddress\r\n      schedulingLocationId\r\n      latitude\r\n      longitude\r\n      addressLine1\r\n      addressLine2\r\n      city\r\n      stateOrProvince\r\n      zipCode\r\n      countryCode\r\n    }\r\n    portal {\r\n      portalId\r\n      name\r\n      loginUrl\r\n      selfEnrollmentUrl\r\n      dashboardUrl\r\n      portalType\r\n    }\r\n    domain {\r\n      beginDate\r\n      endDate\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}graphql/query",
+					"host": [
+						"{{baseurl}}graphql"
+					],
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "QueryEdwByPerson",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"var ApiName = \"QueryEdwByPerson\";\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data !=null ){\r",
+							"\t\t\tpm.test(ApiName+\" graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(ApiName+\" graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(ApiName+\" graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"}\r",
+							"else{\r",
+							"\tpm.test(ApiName+\" graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  queryEdwByPerson(username: \"{{enrollUserEmail}}\", personId: \"{{userPersonId}}\") {\r\n    isVisible\r\n    mrn\r\n    isRegisteredInPortal\r\n    facility {\r\n      edwFacilityName\r\n      friendlyFacilityName\r\n      domainName\r\n      registrationSystem\r\n      webAddress\r\n      schedulingLocationId\r\n      latitude\r\n      longitude\r\n      addressLine1\r\n      addressLine2\r\n      city\r\n      stateOrProvince\r\n      zipCode\r\n      countryCode\r\n    }\r\n    portal {\r\n      portalId\r\n      name\r\n      loginUrl\r\n      selfEnrollmentUrl\r\n      dashboardUrl\r\n      portalType\r\n    }\r\n    domain {\r\n      beginDate\r\n      endDate\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/graphql/query",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"graphql",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "queryEdwForExistingMrn",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  queryEdwForExistingMrn(request:{\r\n    firstName: \"Kermit\",\r\n    lastName: \"ZZTestFrog\",\r\n    dateOfBirth: \"01/01/1991\",\r\n    zipCode: \"96001\",\r\n    gender: \"MALE\",\r\n    schedulingLocationId: \"boulder-creek\"\r\n  },username:\"sunnys2@mailinator.com\"){\r\n    mrn   \r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{edwUrl}}/api/graphql/query",
+					"host": [
+						"{{edwUrl}}"
+					],
+					"path": [
+						"api",
+						"graphql",
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edwRecords",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							" var jsonData = pm.response.json();\r",
+							"var ApiName = \"EDW records\";\r",
+							"if(pm.response.code == 200){\r",
+							"\t\tif(jsonData.data !=null ){\r",
+							"\t\t\tpm.test(ApiName+\" graphQl query executed successfully with response code \"+pm.response.code, function () {\r",
+							"\t\t\tpm.response.to.have.status(200);\r",
+							"\t\t\t});\t\r",
+							"\t\t}else {\r",
+							"\t\t\tif(jsonData.errors[0].extensions.code == \"not-authorized\"){\r",
+							"\t\t\t\tpm.test(ApiName+\" graphQl query failed with following message \"+jsonData.errors[0].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}else if(jsonData.errors[0].extensions.code == \"SERVICE\"){\r",
+							"\t\t\t\tpm.test(ApiName+\" graphQl query failed with following message \"+jsonData.errors[1].message, function () {\r",
+							"\t\t\tpm.expect(jsonData.data).to.be.not.null;\r",
+							"\t\t\t});\r",
+							"\t\t\t}\r",
+							"\t\t}\r",
+							"\tconsole.log(jsonData);\r",
+							"}\r",
+							"else{\r",
+							"\tpm.test(ApiName+\" graphiQL query failed with response code \"+pm.response.code,function(){\r",
+							"\tpm.response.to.have.status(200);\t\r",
+							"\t});\r",
+							"\tconsole.log(jsonData);\r",
+							"\t}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAccesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "bearer eyJraWQiOiJPZ3ZubzV0dk1NekZtaWp6SlFZMGh5UkZPT3J2N3hvUkpheUFVYVFFUmVZIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlJrdlpxNmc3NEVtWFJuWk9tREpJQURZM2wwRkFvbkpfQ2RFQ21POE1Dd3MucXBXSDQ5eWVwMWFlc1FERlZzZTZUS3E5K01ZblVpVEorRVNQc0srMG42RT0iLCJpc3MiOiJodHRwczovL2xvZ2lucHJldmlldy5kaWduaXR5aGVhbHRoLm9yZy9vYXV0aDIvYXVzYjJiMGpicmk3TXNRR2wwaDciLCJhdWQiOiJodHRwczovL2NpYW0uZGlnbml0eWhlYWx0aC5vcmciLCJpYXQiOjE1NjE1NDMzMDYsImV4cCI6MTU2MTU0NTEwNiwiY2lkIjoiMG9hYjU0YWk2cTB6Rkk4ZnEwaDciLCJ1aWQiOiIwMHVocDhheTh5cjVaVlFabzBoNyIsInNjcCI6WyJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwiZ3JvdXBzIiwicHJvZmlsZSIsIm9wZW5pZCJdLCJzdWIiOiJzdW5ueXMyQG1haWxpbmF0b3IuY29tIiwiaWRfbGV2ZWwiOjIsImdyb3VwcyI6WyJPT0QgRGV2ZWxvcGVycyIsIkV2ZXJ5b25lIiwiTXkgSGVscCAtIFN1cGVyIEFkbWluIiwiTGV2ZWwgMiIsIkxldmVsIDQiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VubnlzMkBtYWlsaW5hdG9yLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0IiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZGlnaXRhbF9ob21lX3VzZXJfaWQiOiIxNmQyNmQ2NC05ZGZhLTQ5MjUtYTFhMC02ZDUyNWY1ZDI4YjkifQ.j_Jsr-SHblARQxLSLGHGkBMmeFpK_lcRpDhsyCStqxGxZgT8Wdd95GFcqloODex0zJNAitdn28dweQzM5Li0znPG9ddgdfWeGDLubPh5jMoBCPbmQ6noGcYn0gU8FSyytTr7m4QGL44zFdcr9XVZN_vVi9dTiK0Xc8CztN2nIqqZLgoGknnZPj0Qy4giel7OZRbHUt95cV2a3danQU-m3EsVmC3yIXviu-6D_jLSn7hl1gMLe13oEMjVJxeROtGIyZnFywdoII48pFumAyD68vlPtYAjg3Jh6XcCair6QvMvkxaeVXiQypM5S3h5QlwCHeTFz-p-Tp1M5o_hzpf5TA"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  edwRecords(\r\n    username: \"{{enrollUserEmail}}\",\r\n    personId: \"{{userPersonId}}\"\r\n  ){\r\n    isVisible\r\n    isRegisteredInPortal\r\n    mrn\r\n    facility {\r\n      edwFacilityName\r\n      friendlyFacilityName\r\n      domainName\r\n      registrationSystem\r\n      webAddress\r\n      schedulingLocationId\r\n      latitude\r\n      longitude\r\n      addressLine1\r\n      addressLine2\r\n      city\r\n      stateOrProvince\r\n      zipCode\r\n      countryCode\r\n    }\r\n    portal {\r\n      portalId\r\n      name\r\n      loginUrl\r\n      selfEnrollmentUrl\r\n      dashboardUrl\r\n      portalType\r\n    }\r\n    domain {\r\n      beginDate\r\n      endDate\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}graphql/query",
+					"host": [
+						"{{baseurl}}graphql"
+					],
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "enrollUserEmail",
+			"value": ""
+		},
+		{
+			"key": "enrollUserPassword",
+			"value": ""
+		},
+		{
+			"key": "userAccesstoken",
+			"value": ""
+		},
+		{
+			"key": "userAddressLine1",
+			"value": ""
+		},
+		{
+			"key": "userAddressLine2",
+			"value": ""
+		},
+		{
+			"key": "userCity",
+			"value": ""
+		},
+		{
+			"key": "userContactName",
+			"value": ""
+		},
+		{
+			"key": "userContactPh",
+			"value": ""
+		},
+		{
+			"key": "userCountryCode",
+			"value": ""
+		},
+		{
+			"key": "userDob",
+			"value": ""
+		},
+		{
+			"key": "userEmail",
+			"value": ""
+		},
+		{
+			"key": "userFirstName",
+			"value": ""
+		},
+		{
+			"key": "userGender",
+			"value": ""
+		},
+		{
+			"key": "userHomePhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "userLastName",
+			"value": ""
+		},
+		{
+			"key": "userMobilePhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "userOfficePhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "userPersonId",
+			"value": ""
+		},
+		{
+			"key": "userPhoneNumber",
+			"value": ""
+		},
+		{
+			"key": "userPrimaryCaregiverName",
+			"value": ""
+		},
+		{
+			"key": "userStateOrProvince",
+			"value": ""
+		},
+		{
+			"key": "userUserID",
+			"value": ""
+		},
+		{
+			"key": "userVerificationCode",
+			"value": ""
+		},
+		{
+			"key": "userZipCode",
+			"value": ""
+		},
+		{
+			"key": "consumerApp",
+			"value": ""
+		},
+		{
+			"key": "providerApp",
+			"value": ""
+		},
+		{
+			"key": "serviceToke",
+			"value": ""
+		},
+		{
+			"key": "serviceToken",
+			"value": ""
+		}
+	]
+}
